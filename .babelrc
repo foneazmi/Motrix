@@ -5,9 +5,7 @@
       "presets": ["@babel/preset-env"]
     },
     "renderer": {
-      "presets": [
-        "@babel/preset-env"
-      ],
+      "presets": ["@babel/preset-env"],
       "plugins": [
         [
           "component",
@@ -31,8 +29,5 @@
       ]
     }
   },
-  "plugins": [
-    "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-transform-runtime"
-  ]
+  "plugins": ["@babel/plugin-transform-runtime"]
 }
