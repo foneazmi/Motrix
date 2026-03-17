@@ -9,11 +9,11 @@ export default class CommandManager extends EventEmitter {
 
   register (id, fn) {
     if (this.commands[id]) {
-      console.log('[Motrix] Attempting to register an already-registered command: ' + id)
+      // Command already registered - skip
       return null
     }
     if (!id || !fn) {
-      console.error('[Motrix] Attempting to register a command with a missing id, or command function.')
+      // Invalid command registration - skip
       return null
     }
     this.commands[id] = fn
@@ -35,7 +35,7 @@ export default class CommandManager extends EventEmitter {
       try {
         this.emit('beforeExecuteCommand', id)
       } catch (err) {
-        console.error(err)
+        // Ignore command execution errors
       }
       const result = fn(...args)
       return result

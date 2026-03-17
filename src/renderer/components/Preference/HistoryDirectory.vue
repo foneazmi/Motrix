@@ -123,15 +123,12 @@
         this.visible = false
       },
       handleFavoriteItem (directory) {
-        console.log('handleFavoriteItem==>', directory)
         this.$store.dispatch('preference/favoriteDirectory', directory)
       },
       handleCancelFavoriteItem (directory) {
-        console.log('handleCancelFavoriteItem==>', directory)
         this.$store.dispatch('preference/cancelFavoriteDirectory', directory)
       },
       handleRemoveItem (directory) {
-        console.log('handleRemoveItem==>', directory)
         this.$store.dispatch('preference/removeDirectory', directory)
       }
     }

@@ -363,9 +363,8 @@
           })
         } else if (type === 'metalink') {
         // @TODO addMetalink
-        } else {
-          console.error('[Motrix] Add task fail', form)
         }
+        // Invalid task type - silently ignore
       },
       submitForm (formName) {
         this.$refs[formName].validate(valid => {
@@ -380,8 +379,8 @@
             if (this.form.newTaskShowDownloading) {
               this.$router.push({
                 path: '/task/active'
-              }).catch(err => {
-                console.log(err)
+              }).catch(() => {
+                // Silently handle navigation errors
               })
             }
           } catch (err) {

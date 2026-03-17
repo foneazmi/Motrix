@@ -84,7 +84,6 @@ const actions = {
   fetchItemWithPeers ({ dispatch }, gid) {
     return api.fetchTaskItemWithPeers({ gid })
       .then((data) => {
-        console.log('fetchItemWithPeers===>', data)
         dispatch('updateCurrentTaskItem', data)
       })
   },

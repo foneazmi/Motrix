@@ -92,7 +92,7 @@ export const peerIdParser = (str) => {
     const buffer = Buffer.from(decodedStr, 'binary')
     parsed = bitTorrentPeerId(buffer)
   } catch (e) {
-    console.log('peerIdParser.fail', e, str, decodedStr)
+    // Silently handle parse errors - return unknown peer name
     return UNKNOWN_PEERID_NAME
   }
 
@@ -209,7 +209,6 @@ export const ellipsis = (str = '', maxLen = 64) => {
 }
 
 export const getFileSelection = (files = []) => {
-  console.log('getFileSelection===>', files)
   const selectedFiles = files.filter((file) => file.selected)
   if (files.length === 0 || selectedFiles.length === 0) {
     return NONE_SELECTED_FILES

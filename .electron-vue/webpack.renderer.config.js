@@ -87,14 +87,6 @@ let rendererConfig = {
         ],
       },
       {
-        test: /\.less$/,
-        use: [
-          devMode ? "vue-style-loader" : MiniCssExtractPlugin.loader,
-          "css-loader",
-          "less-loader",
-        ],
-      },
-      {
         test: /\.css$/,
         use: [
           devMode ? "vue-style-loader" : MiniCssExtractPlugin.loader,
@@ -103,7 +95,13 @@ let rendererConfig = {
       },
       {
         test: /\.js$/,
-        use: "babel-loader",
+        use: {
+          loader: "babel-loader",
+          options: {
+            cacheDirectory: devMode,
+            cacheCompression: false,
+          },
+        },
         exclude: /node_modules/,
       },
       {
@@ -119,7 +117,6 @@ let rendererConfig = {
             loaders: {
               sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1&sassOptions={"silenceDeprecations":["import","global-builtin"],"quietDeps":true,"logger":{"warn":()=>{},"debug":()=>{}}}',
               scss: 'vue-style-loader!css-loader!sass-loader?sassOptions={"silenceDeprecations":["import","global-builtin"],"quietDeps":true,"logger":{"warn":()=>{},"debug":()=>{}}}',
-              less: "vue-style-loader!css-loader!less-loader",
             },
           },
         },
@@ -164,11 +161,13 @@ let rendererConfig = {
     }),
     new Webpack.HotModuleReplacementPlugin(),
     new Webpack.NoEmitOnErrorsPlugin(),
-    // ESLint plugin disabled due to ESLint v10 compatibility issues
-    // new ESLintPlugin({
-    //   extensions: ['js', 'vue'],
-    //   formatter: require('eslint-friendly-formatter')
-    // })
+    new ESLintPlugin({
+      extensions: ['js'],
+      emitWarning: false,
+      failOnError: false,
+      overrideConfigFile: path.resolve(__dirname, '../eslint.config.js'),
+      quiet: true,
+    }),
   ],
   output: {
     filename: "[name].js",
@@ -191,9 +190,41 @@ let rendererConfig = {
     minimizer: [
       new TerserPlugin({
         extractComments: false,
+        parallel: true,
+        terserOptions: {
+          compress: {
+            drop_console: !devMode,
+            drop_debugger: !devMode,
+          },
+        },
       }),
-      new CssMinimizerPlugin(),
+      new CssMinimizerPlugin({
+        parallel: true,
+      }),
     ],
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          priority: 10,
+          chunks: 'initial',
+        },
+        vue: {
+          test: /[\\/]node_modules[\\/](vue|vuex|vue-router)[\\/]/,
+          name: 'vue',
+          priority: 20,
+          chunks: 'initial',
+        },
+        element: {
+          test: /[\\/]node_modules[\\/](element-ui)[\\/]/,
+          name: 'element',
+          priority: 20,
+          chunks: 'initial',
+        },
+      },
+    },
   },
 };
 

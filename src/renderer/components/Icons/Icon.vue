@@ -33,8 +33,7 @@
         type: String,
         validator (val) {
           if (val && !(val in icons)) {
-            console.warn(`Invalid prop: prop "name" is referring to an unregistered icon "${val}".` +
-              '\nPlease make sure you have imported this icon before using it.')
+            // Invalid icon name - skip rendering
             return false
           }
           return true
@@ -65,7 +64,6 @@
         let scale = this.scale
         scale = typeof scale === 'undefined' ? 1 : Number(scale)
         if (isNaN(scale) || scale <= 0) {
-          console.warn('Invalid prop: prop "scale" should be a number over 0.', this)
           return this.outerScale
         }
         return scale * this.outerScale
@@ -140,7 +138,7 @@
     },
     mounted () {
       if (!this.name && this.$children.length === 0) {
-        console.warn('Invalid prop: prop "name" is required.')
+        // Icon name required - skip rendering
         return
       }
 

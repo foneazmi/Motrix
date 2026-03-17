@@ -16,7 +16,6 @@ export const showItemInFolder = (fullPath, { errorMsg }) => {
 
   fullPath = resolve(fullPath)
   access(fullPath, constants.F_OK, (err) => {
-    console.warn(`[Motrix] ${fullPath} ${err ? 'does not exist' : 'exists'}`)
     if (err && errorMsg) {
       Message.error(errorMsg)
       return
@@ -86,7 +85,6 @@ export const moveTaskFilesToTrash = (task) => {
 
   let deleteResult1 = true
   access(path, constants.F_OK, async (err) => {
-    console.log(`[Motrix] ${path} ${err ? 'does not exist' : 'exists'}`)
     if (!err) {
       deleteResult1 = await shell.trashItem(path)
     }
@@ -100,7 +98,6 @@ export const moveTaskFilesToTrash = (task) => {
   let deleteResult2 = true
   const extraFilePath = `${path}.aria2`
   access(extraFilePath, constants.F_OK, async (err) => {
-    console.log(`[Motrix] ${extraFilePath} ${err ? 'does not exist' : 'exists'}`)
     if (!err) {
       deleteResult2 = await shell.trashItem(extraFilePath)
     }

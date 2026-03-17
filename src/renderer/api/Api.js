@@ -15,15 +15,34 @@ import { ENGINE_RPC_HOST } from '@shared/constants'
 export default class Api {
   constructor (options = {}) {
     this.options = options
+    this.isInitialized = false
+    this.retryCount = 0
+    this.maxRetries = 3
 
     this.init()
   }
 
   async init () {
-    this.config = await this.loadConfig()
+    try {
+      this.config = await this.loadConfig()
+      this.client = this.initClient()
+      await this.client.open()
+      this.isInitialized = true
+      this.retryCount = 0
+    } catch (error) {
+      // Will retry on next API call
+      this.isInitialized = false
+      throw new Error(`Failed to initialize API: ${error.message}`)
+    }
+  }
 
-    this.client = this.initClient()
-    this.client.open()
+  /**
+   * Ensure client is open before making requests
+   */
+  async ensureClientOpen () {
+    if (!this.isInitialized || !this.client) {
+      await this.init()
+    }
   }
 
   loadConfigFromLocalStorage () {
@@ -65,7 +84,7 @@ export default class Api {
         this.client = null
       })
       .catch(err => {
-        console.log('engine client close fail', err)
+        // Silently handle close errors
       })
   }
 
@@ -94,18 +113,16 @@ export default class Api {
     const config = {}
 
     if (!isEmpty(user)) {
-      console.info('[Motrix] save user config: ', user)
       config.user = user
     }
 
     if (!isEmpty(system)) {
-      console.info('[Motrix] save system config: ', system)
       config.system = system
       this.updateActiveTaskOption(system)
     }
 
     if (!isEmpty(others)) {
-      console.info('[Motrix] save config found illegal key: ', others)
+      // Ignore invalid config keys
     }
 
     ipcRenderer.send('command', 'application:save-preference', config)
@@ -113,12 +130,18 @@ export default class Api {
 
   getVersion () {
     return this.client.call('getVersion')
+      .catch(error => {
+        throw new Error(`Failed to get version: ${error.message}`)
+      })
   }
 
   changeGlobalOption (options) {
     const args = formatOptionsForEngine(options)
 
     return this.client.call('changeGlobalOption', args)
+      .catch(error => {
+        throw new Error(`Failed to change global options: ${error.message}`)
+      })
   }
 
   getGlobalOption () {
@@ -213,11 +236,9 @@ export default class Api {
         ['aria2.tellActive', ...activeArgs],
         ['aria2.tellWaiting', ...waitingArgs]
       ]).then((data) => {
-        console.log('[Motrix] fetch downloading task list data:', data)
         const result = mergeTaskResult(data)
         resolve(result)
       }).catch((err) => {
-        console.log('[Motrix] fetch downloading task list fail:', err)
         reject(err)
       })
     })
@@ -270,16 +291,11 @@ export default class Api {
         ['aria2.tellStatus', ...statusArgs],
         ['aria2.getPeers', ...peersArgs]
       ]).then((data) => {
-        console.log('[Motrix] fetchTaskItemWithPeers:', data)
         const result = data[0] && data[0][0]
         const peers = data[1] && data[1][0]
         result.peers = peers || []
-        console.log('[Motrix] fetchTaskItemWithPeers.result:', result)
-        console.log('[Motrix] fetchTaskItemWithPeers.peers:', peers)
-
         resolve(result)
       }).catch((err) => {
-        console.log('[Motrix] fetch downloading task list fail:', err)
         reject(err)
       })
     })

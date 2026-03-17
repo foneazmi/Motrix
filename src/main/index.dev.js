@@ -13,7 +13,7 @@ require('electron').app.whenReady().then(() => {
   installExtension.default(installExtension.VUEJS_DEVTOOLS)
     .then(() => {})
     .catch(err => {
-      console.log('Unable to install `vue-devtools`: \n', err)
+      // Silently fail in development - devtools not critical
     })
 })
 

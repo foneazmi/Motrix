@@ -62,8 +62,8 @@
       nav (page) {
         this.$router.push({
           path: page
-        }).catch(err => {
-          console.log(err)
+        }).catch(() => {
+          // Silently handle navigation errors
         })
       }
     }

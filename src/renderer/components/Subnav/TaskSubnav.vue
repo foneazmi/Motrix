@@ -55,8 +55,8 @@
       nav (status = 'active') {
         this.$router.push({
           path: `/task/${status}`
-        }).catch(err => {
-          console.log(err)
+        }).catch(() => {
+          // Silently handle navigation errors
         })
       }
     }

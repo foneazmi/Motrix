@@ -666,7 +666,6 @@
         this.form.dhtListenPort = port
       },
       onRpcListenPortChange (value) {
-        console.log('onRpcListenPortChange===>', value)
         if (EMPTY_STRING === value) {
           this.form.rpcListenPort = this.rpcDefaultPort
         }
@@ -724,7 +723,6 @@
       submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (!valid) {
-            console.error('[Motrix] preference form valid:', valid)
             return false
           }
 
@@ -753,8 +751,6 @@
           if (rpcListenPort === EMPTY_STRING) {
             data.rpcListenPort = this.rpcDefaultPort
           }
-
-          console.log('[Motrix] preference changed data:', data)
 
           this.$store.dispatch('preference/save', data)
             .then(() => {

@@ -27,8 +27,8 @@
       handleRoute (route) {
         this.$router.push({
           path: route
-        }).catch(err => {
-          console.log(err)
+        }).catch(() => {
+          // Silently handle navigation errors
         })
       }
     }

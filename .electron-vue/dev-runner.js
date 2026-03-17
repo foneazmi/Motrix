@@ -43,11 +43,14 @@ function startRenderer () {
 
     const compiler = Webpack(rendererConfig)
     const devServerOptions = {
-      ...rendererConfig.devServer,
       port: 9080,
       static: {
         directory: path.resolve(__dirname, "../"),
       },
+      devMiddleware: {
+        publicPath: "/",
+      },
+      hot: true,
     };
 
     const server = new WebpackDevServer(devServerOptions, compiler)

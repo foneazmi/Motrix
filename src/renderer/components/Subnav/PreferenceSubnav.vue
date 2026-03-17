@@ -55,8 +55,8 @@
       nav (category = 'basic') {
         this.$router.push({
           path: `/preference/${category}`
-        }).catch(err => {
-          console.log(err)
+        }).catch(() => {
+          // Silently handle navigation errors
         })
       }
     }

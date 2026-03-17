@@ -246,7 +246,6 @@
       },
       handleAppResize () {
         debounce(() => {
-          console.log('resize===>', this.activeTab, this.$refs.taskGraphic)
           if (this.activeTab === 'activity' && this.$refs.taskGraphic) {
             this.$refs.taskGraphic.updateGraphicWidth()
           }

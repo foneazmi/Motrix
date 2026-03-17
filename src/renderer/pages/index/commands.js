@@ -88,9 +88,8 @@ const addTaskByType = (type) => {
     })
   } else if (type === 'metalink') {
   // @TODO addMetalink
-  } else {
-    console.error('addTask fail', form)
   }
+  // Invalid task type - silently ignore
 }
 
 const showAddBtTask = () => {
@@ -116,14 +115,14 @@ const showAddBtTaskWithFile = (payload = {}) => {
 const navigateTaskList = (payload = {}) => {
   const { status = 'active' } = payload
 
-  router.push({ path: `/task/${status}` }).catch(err => {
-    console.log(err)
+  router.push({ path: `/task/${status}` }).catch(() => {
+    // Silently handle navigation errors
   })
 }
 
 const navigatePreferences = () => {
-  router.push({ path: '/preference' }).catch(err => {
-    console.log(err)
+  router.push({ path: '/preference' }).catch(() => {
+    // Silently handle navigation errors
   })
 }
 

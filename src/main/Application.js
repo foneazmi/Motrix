@@ -760,13 +760,13 @@ export default class Application extends EventEmitter {
     logger.info('[Motrix] save preference:', config)
     const { system, user } = config
     if (!isEmpty(system)) {
-      console.info('[Motrix] main save system config: ', system)
+      logger.info('[Motrix] main save system config: ', system)
       this.configManager.setSystemConfig(system)
       this.engineClient.changeGlobalOption(system)
     }
 
     if (!isEmpty(user)) {
-      console.info('[Motrix] main save user config: ', user)
+      logger.info('[Motrix] main save user config: ', user)
       this.configManager.setUserConfig(user)
     }
   }

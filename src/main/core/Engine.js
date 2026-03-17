@@ -113,7 +113,7 @@ export default class Engine {
       extraConfig['seed-ratio'] = 0
       delete extraConfig['seed-time']
     }
-    console.log('extraConfig===>', extraConfig)
+    logger.debug('[Engine] extraConfig:', extraConfig)
 
     const extra = transformConfig(extraConfig)
     result = [...result, ...extra]

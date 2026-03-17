@@ -38,13 +38,13 @@ function initTrayWorker () {
     switch (type) {
     case 'initialized':
     case 'log':
-      console.log('[Motrix] Log from Tray Worker: ', payload)
+      // Tray worker logging - disabled for production
       break
     case 'tray:drawed':
       updateTray(payload)
       break
     default:
-      console.warn('[Motrix] Tray Worker unhandled message type:', type, payload)
+      // Ignore unknown message types from tray worker
     }
   })
 
@@ -102,7 +102,6 @@ function init (config) {
 
 store.dispatch('preference/fetchPreference')
   .then((config) => {
-    console.info('[Motrix] load preference:', config)
     init(config)
   })
   .catch((err) => {

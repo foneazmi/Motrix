@@ -125,7 +125,6 @@ const actions = {
   },
   fetchBtTracker (_, trackerSource = []) {
     const { proxy = { enable: false } } = state.config
-    console.log('fetchBtTracker', trackerSource, proxy)
     return fetchBtTrackerFromSource(trackerSource, proxy)
   },
   toggleEngineMode () {

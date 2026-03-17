@@ -19,7 +19,13 @@ let mainConfig = {
     rules: [
       {
         test: /\.js$/,
-        use: "babel-loader",
+        use: {
+          loader: "babel-loader",
+          options: {
+            cacheDirectory: devMode,
+            cacheCompression: false,
+          },
+        },
         exclude: /node_modules/,
       },
       {
@@ -39,10 +45,13 @@ let mainConfig = {
   },
   plugins: [
     new Webpack.NoEmitOnErrorsPlugin(),
-    // ESLint plugin disabled due to ESLint v10 compatibility issues
-    // new ESLintPlugin({
-    //   formatter: require('eslint-friendly-formatter')
-    // })
+    new ESLintPlugin({
+      extensions: ['js'],
+      emitWarning: false,
+      failOnError: false,
+      overrideConfigFile: path.resolve(__dirname, '../eslint.config.js'),
+      quiet: true,
+    }),
   ],
   resolve: {
     alias: {
@@ -57,6 +66,13 @@ let mainConfig = {
     minimizer: [
       new TerserPlugin({
         extractComments: false,
+        parallel: true,
+        terserOptions: {
+          compress: {
+            drop_console: !devMode,
+            drop_debugger: !devMode,
+          },
+        },
       }),
     ],
   },
