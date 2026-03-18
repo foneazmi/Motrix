@@ -4,7 +4,7 @@ process.env.NODE_ENV = 'production'
 
 const { say } = require('cfonts')
 const chalk = require('chalk')
-const del = require('del')
+const { deleteSync } = require('del')
 const Webpack = require('webpack')
 const Multispinner = require('@motrix/multispinner')
 
@@ -26,7 +26,7 @@ if (process.env.BUILD_TARGET === 'clean') {
 }
 
 function clean () {
-  del.sync(['release/*', '!.gitkeep'])
+  deleteSync(['release/*', '!.gitkeep'])
   console.log(`\n${doneLog}\n`)
   process.exit()
 }
@@ -34,7 +34,7 @@ function clean () {
 function build () {
   greeting()
 
-  del.sync(['dist/electron/*', '!.gitkeep'])
+  deleteSync(['dist/electron/*', '!.gitkeep'])
 
   const tasks = ['main', 'renderer']
   const m = new Multispinner(tasks, {

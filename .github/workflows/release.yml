@@ -2,9 +2,9 @@ name: Build/release
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   release:
@@ -17,29 +17,17 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
-          node-version: 18
-
-      - name: Install Snapcraft
-        uses: samuelmeuli/action-snapcraft@v2
-        # Only install Snapcraft on Ubuntu
-        if: startsWith(matrix.os, 'ubuntu')
-        env:
-          # Snapcraft
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.snapcraft_token }}
-
-      - name: Test Snapcraft
-        if: startsWith(matrix.os, 'ubuntu')
-        run: snapcraft --help
+          node-version: 22
 
       - name: Build/release Electron app
         uses: motrixapp/action-electron-builder@v2
         with:
-          build_script_name: 'build:github'
+          build_script_name: "build:github"
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
           github_token: ${{ secrets.github_token }}
@@ -52,8 +40,6 @@ jobs:
           # release the app after building
           release: ${{ vars.skip_publish != 'true' }}
         env:
-          # Snapcraft
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.snapcraft_token }}
           # macOS notarization
           TEAM_ID: ${{ secrets.team_id }}
           APPLE_ID: ${{ secrets.apple_id }}
